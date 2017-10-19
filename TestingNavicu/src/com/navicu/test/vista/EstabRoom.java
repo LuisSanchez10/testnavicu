@@ -11,7 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.print.attribute.Size2DSyntax.MM;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,19 +36,9 @@ public class EstabRoom extends javax.swing.JFrame {
         initComponents();
         idd = id;
         emailuser.setText(users);
-        if(this.jTable1.getRowCount()!=0 && this.jTable1.getSelectedRow()!=-1){
-             addest.setEnabled(false);
-             text1.setEnabled(false);
-             txt2.setEnabled(false);
-             txt3.setEnabled(false);
-             date.setEnabled(false);
-             txt5.setEnabled(false);
-        }else{
-            addest.setEnabled(true);
-            editest.setEnabled(false);
-            delest.setEnabled(false);
-            jTable1.setEnabled(false);
-        }
+        listar();
+        viewList();
+        
     }
 
     /**
@@ -103,6 +99,11 @@ public class EstabRoom extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         addest.setText("Agregar Establecimiento");
@@ -136,8 +137,13 @@ public class EstabRoom extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         editest.setText("Editar Establecimiento");
+        editest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editestActionPerformed(evt);
+            }
+        });
 
-        delest.setText("Elminar Establecimiento");
+        delest.setText("Eliminar Establecimiento");
         delest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 delestActionPerformed(evt);
@@ -187,13 +193,8 @@ public class EstabRoom extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                        .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -213,7 +214,13 @@ public class EstabRoom extends javax.swing.JFrame {
                             .addComponent(addest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(editest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(delest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(32, 32, 32))))
+                        .addGap(32, 32, 32))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,17 +262,15 @@ public class EstabRoom extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addGap(4, 4, 4)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
-                            .addComponent(jButton5)
-                            .addComponent(jButton6)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel4))
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5)
+                    .addComponent(jButton6))
                 .addContainerGap())
         );
 
@@ -274,6 +279,24 @@ public class EstabRoom extends javax.swing.JFrame {
 
     private void delestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delestActionPerformed
         // TODO add your handling code here:
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        String deletesql = "delete from establishment cascade where id_user='" + idd + "'";
+        try{
+            PreparedStatement ps  = con2.prepareStatement(deletesql);
+            int n = ps.executeUpdate();
+                if (n>0){
+                    
+                    con2.close();
+                    listar();
+                    viewList();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Los datos no se borraron, intente nuevamene");
+                }
+                con2.close();
+        }catch(SQLException e){
+            
+        }
     }//GEN-LAST:event_delestActionPerformed
 
     private void addestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addestActionPerformed
@@ -291,7 +314,7 @@ public class EstabRoom extends javax.swing.JFrame {
         String year = Integer.toString(date.getCalendar().get(Calendar.YEAR));
         fecha = (dia + "-" + mes + "-" + year);
         
-        insertsql = "INSERT INTO establishment (id_user, name_st, location_st, type_st, date_open, address) VALUES (?,?,?,?,?)";
+        insertsql = "INSERT INTO establishment (id_user, name_st, location_st, type_st, date_open, address) VALUES (?,?,?,?,?,?)";
         try{
             PreparedStatement ps  = con2.prepareStatement(insertsql);
             ps.setInt(1, idd);
@@ -305,6 +328,7 @@ public class EstabRoom extends javax.swing.JFrame {
                 if (n>0){
                     con2.close();
                     listar();
+                    viewList();
                 }else{
                     JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
                 }
@@ -314,7 +338,81 @@ public class EstabRoom extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error:"+e);
         }
         
+        
     }//GEN-LAST:event_addestActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        String selectsql ="select name_st, location_st, type_st, date_open, address from establishment where id_user='" + idd + "'";   
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        try{
+            Statement st = con2.createStatement();
+            ResultSet rs = st.executeQuery(selectsql);
+            String datos[] = new String[5];
+            while (rs.next()){
+               for (int i=0; i<5;i++){
+                   datos[i]=rs.getString(i+1);
+               } 
+               text1.setText(datos[0]);
+               txt2.setText(datos[1]);
+               txt3.setText(datos[2]);
+               txt5.setText(datos[4]);
+               
+               Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                cal.setTime(sdf.parse(datos[3]));
+                
+                date.setCalendar(cal);
+            }
+            con2.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error:"+e);
+        } catch (ParseException ex) {
+            Logger.getLogger(EstabRoom.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void editestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editestActionPerformed
+        // TODO add your handling code here:
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        String nombre, ubicacion, tipo, fecha, direccion, updatesql;
+        
+        nombre = text1.getText();
+        ubicacion = txt2.getText();
+        tipo = txt3.getText();
+        direccion = txt5.getText();
+                
+        String dia = Integer.toString(date.getCalendar().get(Calendar.DAY_OF_MONTH));
+        String mes = Integer.toString(date.getCalendar().get(Calendar.MONTH) + 1);
+        String year = Integer.toString(date.getCalendar().get(Calendar.YEAR));
+        fecha = (dia + "-" + mes + "-" + year);
+        
+        updatesql = "UPDATE establishment SET name_st=?, location_st=?, type_st=?, date_open=?, address=? where id_user='" + idd + "'";
+        try{
+            
+            PreparedStatement ps  = con2.prepareStatement(updatesql);
+            ps.setString(1, nombre);
+            ps.setString(2, ubicacion);
+            ps.setString(3, tipo);
+            ps.setString(4, fecha);
+            ps.setString(5, direccion);
+            
+            int n = ps.executeUpdate();
+                if (n>0){
+                    JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente");
+                    con2.close();
+                    listar();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
+                }
+                con2.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error:"+e);
+        }
+    }//GEN-LAST:event_editestActionPerformed
     
     public void listar(){
         String selectsql ="select id, name_st, location_st, type_st, date_open, address from establishment where id_user='" + idd + "'";   
@@ -324,18 +422,40 @@ public class EstabRoom extends javax.swing.JFrame {
             Statement st = con2.createStatement();
             ResultSet rs = st.executeQuery(selectsql);
             Object datos[] = new Object[6];
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("id");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Ubicación");
+            modelo.addColumn("Tipo de Establecimient");
+            modelo.addColumn("Fecha apertura");
+            modelo.addColumn("Dirección");
             while (rs.next()){
                for (int i=0; i<6;i++){
                    datos[i]=rs.getObject(i+1);
                } 
-               DefaultTableModel modelo = new DefaultTableModel();
-               jTable1.setModel(modelo);
+               
                modelo.addRow(datos);
             }
+            jTable1.setModel(modelo);
+            con2.close();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null,"Error:"+e);
         }
     }
+    
+    public void viewList(){
+        if(jTable1.getRowCount()==0){
+            addest.setEnabled(true);
+            editest.setEnabled(false);
+            delest.setEnabled(false);
+        }else{
+            addest.setEnabled(false);
+            editest.setEnabled(true);
+            delest.setEnabled(true);
+        }
+    }
+    
+    
             
     /**
      * @param args the command line arguments
