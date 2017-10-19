@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
@@ -181,6 +182,11 @@ public class EstabRoom extends javax.swing.JFrame {
         });
 
         delroom.setText("Eliminar Habitaciones");
+        delroom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delroomActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nombre");
 
@@ -313,9 +319,8 @@ public class EstabRoom extends javax.swing.JFrame {
                                 .addComponent(addroom)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(editroom)
-                                .addComponent(jLabel10))
+                            .addComponent(editroom)
+                            .addComponent(jLabel10)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel12)
                                 .addComponent(txt11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -512,8 +517,10 @@ public class EstabRoom extends javax.swing.JFrame {
     }
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
-        getIdEst();
-        String selectsql ="select name_room, price, max_person from rooms where id_st='" + idd2 + "'";   
+        
+        int select = jTable2.getSelectedRow()+1;
+        getIdRoom();
+        String selectsql ="select name_room, price, max_person from rooms where id='" + idd3 + "'";   
         ConnectionPostgresql con = new ConnectionPostgresql();
         Connection con2 = con.Connectionsql();
         try{
@@ -531,7 +538,7 @@ public class EstabRoom extends javax.swing.JFrame {
             }
             con2.close();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Error:"+e);
+            JOptionPane.showMessageDialog(null,"Error sxx:"+e);
         }
     }//GEN-LAST:event_jTable2MouseClicked
 
@@ -545,8 +552,10 @@ public class EstabRoom extends javax.swing.JFrame {
         maxper = txt12.getText();
         float tarifa2 = Float.parseFloat(tarifa);
         int maxper2 = Integer.parseInt(maxper);
-        getIdEst();
+        getIdRoom();
+        int select = jTable2.getSelectedRow()+1;
         updatesql = "UPDATE rooms SET name_room=?, price=?, max_person=? where id='" + idd3 + "'";
+
         try{
             
             PreparedStatement ps  = con2.prepareStatement(updatesql);
@@ -558,7 +567,7 @@ public class EstabRoom extends javax.swing.JFrame {
                 if (n>0){
                     JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente");
                     con2.close();
-                    listar();
+                    listar2();
                 }else{
                     JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
                 }
@@ -568,6 +577,29 @@ public class EstabRoom extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error:"+e);
         }
     }//GEN-LAST:event_editroomActionPerformed
+
+    private void delroomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delroomActionPerformed
+        // TODO add your handling code here:
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        getIdRoom();
+        String deletesql = "delete from rooms cascade where id_user='" + idd3 + "'";
+        try{
+            PreparedStatement ps  = con2.prepareStatement(deletesql);
+            int n = ps.executeUpdate();
+                if (n>0){
+                    
+                    con2.close();
+                    listar2();
+                    viewList2();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Los datos no se borraron, intente nuevamene");
+                }
+                con2.close();
+        }catch(SQLException e){
+            
+        }
+    }//GEN-LAST:event_delroomActionPerformed
     
     public void listar(){
         String selectsql ="select id, name_st, location_st, type_st, date_open, address from establishment where id_user='" + idd + "'";   
@@ -678,23 +710,23 @@ public class EstabRoom extends javax.swing.JFrame {
     
     public void getIdRoom(){
         getIdEst();
-        String selectsql ="select id, name_room from rooms where id_st='" + idd2 + "'";   
+        String selectsql ="select id from rooms where id_st='" + idd2 + "'";   
         ConnectionPostgresql con = new ConnectionPostgresql();
         Connection con2 = con.Connectionsql();
         try{
             Statement st = con2.createStatement();
             ResultSet rs = st.executeQuery(selectsql);
-            int datos[] = new int[2];
+            int rumrows = rs.getRow();
+            int datos[] = new int[1];
             while (rs.next()){
-               for (int i=0; i<2;i++){
+               for (int i=0; i<1;i++){
                    datos[i]=rs.getInt(i+1);
-               } 
-               idd3 = datos[0];
-               
+               }
+            idd3 = datos[0];   
             }
             con2.close();
         }catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Error:"+e);
+            JOptionPane.showMessageDialog(null,"Error :"+e);
         }
     }
     
