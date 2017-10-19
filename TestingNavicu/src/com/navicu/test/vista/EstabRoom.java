@@ -32,12 +32,16 @@ public class EstabRoom extends javax.swing.JFrame {
      */
     private static String user;
     private static int idd;
+    private static int idd2;
+    private static int idd3;
     public EstabRoom(String users, int id) {
         initComponents();
         idd = id;
         emailuser.setText(users);
         listar();
+        listar2();
         viewList();
+        viewList2();
         
     }
 
@@ -61,9 +65,9 @@ public class EstabRoom extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         editest = new javax.swing.JButton();
         delest = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        addroom = new javax.swing.JButton();
+        editroom = new javax.swing.JButton();
+        delroom = new javax.swing.JButton();
         text1 = new javax.swing.JTextField();
         txt2 = new javax.swing.JTextField();
         txt3 = new javax.swing.JTextField();
@@ -74,6 +78,13 @@ public class EstabRoom extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         date = new com.toedter.calendar.JDateChooser();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txt10 = new javax.swing.JTextField();
+        txt11 = new javax.swing.JTextField();
+        txt12 = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +145,11 @@ public class EstabRoom extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         editest.setText("Editar Establecimiento");
@@ -150,11 +166,21 @@ public class EstabRoom extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Agregar Habitaciones");
+        addroom.setText("Agregar Habitaciones");
+        addroom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addroomActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Editar Habitaciones");
+        editroom.setText("Editar Habitaciones");
+        editroom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editroomActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("Eliminar Habitaciones");
+        delroom.setText("Eliminar Habitaciones");
 
         jLabel2.setText("Nombre");
 
@@ -166,36 +192,22 @@ public class EstabRoom extends javax.swing.JFrame {
 
         jLabel8.setText("Dirección");
 
+        jLabel9.setText("Nombre de habitación");
+
+        jLabel10.setText("Tarifa");
+
+        jLabel11.setText("Máximo de personas");
+
+        jLabel12.setText("Bs.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
-                .addGap(57, 57, 57))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(jLabel1)
-                        .addGap(45, 45, 45)
-                        .addComponent(emailuser, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel2)
@@ -208,19 +220,46 @@ public class EstabRoom extends javax.swing.JFrame {
                             .addComponent(txt3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(text1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(addest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(editest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(delest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(32, 32, 32))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel11))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt10, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                            .addComponent(txt11)
+                            .addComponent(txt12))
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(editroom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(addroom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(delroom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(28, 28, 28))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())))
+                        .addContainerGap()
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(jLabel1)
+                        .addGap(45, 45, 45)
+                        .addComponent(emailuser, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,16 +300,33 @@ public class EstabRoom extends javax.swing.JFrame {
                         .addComponent(txt5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel9)
+                                    .addComponent(txt10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(addroom)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(editroom)
+                                .addComponent(jLabel10))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel12)
+                                .addComponent(txt11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                    .addComponent(jLabel11)
+                    .addComponent(txt12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delroom))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -301,19 +357,21 @@ public class EstabRoom extends javax.swing.JFrame {
 
     private void addestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addestActionPerformed
         // TODO add your handling code here:
-        ConnectionPostgresql con = new ConnectionPostgresql();
-        Connection con2 = con.Connectionsql();
         String nombre, ubicacion, tipo, fecha, direccion, insertsql, selectsql;
         nombre = text1.getText();
         ubicacion = txt2.getText();
         tipo = txt3.getText();
         direccion = txt5.getText();
-                
         String dia = Integer.toString(date.getCalendar().get(Calendar.DAY_OF_MONTH));
         String mes = Integer.toString(date.getCalendar().get(Calendar.MONTH) + 1);
         String year = Integer.toString(date.getCalendar().get(Calendar.YEAR));
         fecha = (dia + "-" + mes + "-" + year);
         
+        if (nombre.length()==0 || ubicacion.length()==0 || tipo.length()==0 || direccion.length()==0 || fecha.length()==0){
+            JOptionPane.showMessageDialog(null, "Por favor introduza completo los datos");
+        }else{
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
         insertsql = "INSERT INTO establishment (id_user, name_st, location_st, type_st, date_open, address) VALUES (?,?,?,?,?,?)";
         try{
             PreparedStatement ps  = con2.prepareStatement(insertsql);
@@ -337,7 +395,7 @@ public class EstabRoom extends javax.swing.JFrame {
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error:"+e);
         }
-        
+        }
         
     }//GEN-LAST:event_addestActionPerformed
 
@@ -413,6 +471,103 @@ public class EstabRoom extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error:"+e);
         }
     }//GEN-LAST:event_editestActionPerformed
+
+    private void addroomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addroomActionPerformed
+        // TODO add your handling code here:
+        String nombre, tarifa, maxper, insertsql;
+        nombre = txt10.getText();
+        tarifa = txt11.getText();
+        maxper = txt12.getText();
+        if (nombre.length()==0 || tarifa.length()==0 || maxper.length()==0){
+            JOptionPane.showMessageDialog(null, "Por favor introduza completo los datos");
+        }else{
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        
+        float tarifa2 = Float.parseFloat(tarifa);
+        int maxper2 = Integer.parseInt(maxper);
+        getIdEst();
+        insertsql = "INSERT INTO rooms (name_room, price, max_person, id_st) VALUES (?,?,?,?)";
+        try{
+            PreparedStatement ps  = con2.prepareStatement(insertsql);
+            ps.setString(1, nombre);
+            ps.setFloat(2, tarifa2);
+            ps.setInt(3, maxper2);
+            ps.setInt(4, idd2);
+            int n = ps.executeUpdate();
+                if (n>0){
+                    con2.close();
+                    listar2();
+                    viewList();
+                    viewList2();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
+                }
+                con2.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error:"+e);
+        }
+    }//GEN-LAST:event_addroomActionPerformed
+    }
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        // TODO add your handling code here:
+        getIdEst();
+        String selectsql ="select name_room, price, max_person from rooms where id_st='" + idd2 + "'";   
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        try{
+            Statement st = con2.createStatement();
+            ResultSet rs = st.executeQuery(selectsql);
+            String datos[] = new String[3];
+            while (rs.next()){
+               for (int i=0; i<3;i++){
+                   datos[i]=rs.getString(i+1);
+               } 
+               txt10.setText(datos[0]);
+               txt11.setText(datos[1]);
+               txt12.setText(datos[2]);
+
+            }
+            con2.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error:"+e);
+        }
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void editroomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editroomActionPerformed
+        // TODO add your handling code here:
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        String nombre, tarifa, maxper, updatesql;
+        nombre = txt10.getText();
+        tarifa = txt11.getText();
+        maxper = txt12.getText();
+        float tarifa2 = Float.parseFloat(tarifa);
+        int maxper2 = Integer.parseInt(maxper);
+        getIdEst();
+        updatesql = "UPDATE rooms SET name_room=?, price=?, max_person=? where id='" + idd3 + "'";
+        try{
+            
+            PreparedStatement ps  = con2.prepareStatement(updatesql);
+            ps.setString(1, nombre);
+            ps.setFloat(2, tarifa2);
+            ps.setInt(3, maxper2);
+
+            int n = ps.executeUpdate();
+                if (n>0){
+                    JOptionPane.showMessageDialog(null, "Los datos se guardaron correctamente");
+                    con2.close();
+                    listar();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
+                }
+                con2.close();
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error:"+e);
+        }
+    }//GEN-LAST:event_editroomActionPerformed
     
     public void listar(){
         String selectsql ="select id, name_st, location_st, type_st, date_open, address from establishment where id_user='" + idd + "'";   
@@ -448,15 +603,101 @@ public class EstabRoom extends javax.swing.JFrame {
             addest.setEnabled(true);
             editest.setEnabled(false);
             delest.setEnabled(false);
+            addroom.setEnabled(false);
+            editroom.setEnabled(false);
+            delroom.setEnabled(false);
         }else{
             addest.setEnabled(false);
             editest.setEnabled(true);
             delest.setEnabled(true);
+            addroom.setEnabled(true);
+            editroom.setEnabled(true);
+            delroom.setEnabled(true);
         }
     }
     
+    public void viewList2(){
+        if(jTable2.getRowCount()==0){
+            editroom.setEnabled(false);
+            delroom.setEnabled(false);
+        }else{
+            editroom.setEnabled(true);
+            delroom.setEnabled(true);
+        }
+    }
     
+    public void listar2(){
+        getIdEst();
+        String selectsql ="select id, name_room, price, max_person from rooms where id_st='" + idd2 + "'";   
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        try{
+            Statement st = con2.createStatement();
+            ResultSet rs = st.executeQuery(selectsql);
+            Object datos2[] = new Object[4];
+            DefaultTableModel modelo2 = new DefaultTableModel();
+            modelo2.addColumn("id Establecimiento");
+            modelo2.addColumn("Nombre");
+            modelo2.addColumn("Tarifa");
+            modelo2.addColumn("Max Personas");
             
+            while (rs.next()){
+               for (int i=0; i<4;i++){
+                   datos2[i]=rs.getObject(i+1);
+               } 
+               
+               modelo2.addRow(datos2);
+            }
+            jTable2.setModel(modelo2);
+            con2.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error:"+e);
+        }
+    }
+    
+    public void getIdEst(){
+        String selectsql ="select id, id_user from establishment where id_user='" + idd + "'";   
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        try{
+            Statement st = con2.createStatement();
+            ResultSet rs = st.executeQuery(selectsql);
+            int datos[] = new int[2];
+            while (rs.next()){
+               for (int i=0; i<2;i++){
+                   datos[i]=rs.getInt(i+1);
+               } 
+               idd2 = datos[0];
+               
+            }
+            con2.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error:"+e);
+        }
+    }
+    
+    public void getIdRoom(){
+        getIdEst();
+        String selectsql ="select id, name_room from rooms where id_st='" + idd2 + "'";   
+        ConnectionPostgresql con = new ConnectionPostgresql();
+        Connection con2 = con.Connectionsql();
+        try{
+            Statement st = con2.createStatement();
+            ResultSet rs = st.executeQuery(selectsql);
+            int datos[] = new int[2];
+            while (rs.next()){
+               for (int i=0; i<2;i++){
+                   datos[i]=rs.getInt(i+1);
+               } 
+               idd3 = datos[0];
+               
+            }
+            con2.close();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null,"Error:"+e);
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -494,14 +735,17 @@ public class EstabRoom extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addest;
+    private javax.swing.JButton addroom;
     private com.toedter.calendar.JDateChooser date;
     private javax.swing.JButton delest;
+    private javax.swing.JButton delroom;
     private javax.swing.JButton editest;
+    private javax.swing.JButton editroom;
     private javax.swing.JLabel emailuser;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -509,11 +753,15 @@ public class EstabRoom extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField text1;
+    private javax.swing.JTextField txt10;
+    private javax.swing.JTextField txt11;
+    private javax.swing.JTextField txt12;
     private javax.swing.JTextField txt2;
     private javax.swing.JTextField txt3;
     private javax.swing.JTextField txt5;
