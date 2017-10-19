@@ -8,6 +8,7 @@ package com.navicu.test.vista;
 import com.navicu.test.modelo.ConnectionPostgresql;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import com.navicu.test.vista.RegisterClient;
 
 /**
  *
@@ -32,7 +33,7 @@ public class LoginWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         btnlogin = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        register = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         emaitxt = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -49,10 +50,10 @@ public class LoginWindow extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton2.setText("Registrarse");
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+        register.setText("Registrarse");
+        register.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
+                registerActionPerformed(evt);
             }
         });
 
@@ -84,7 +85,7 @@ public class LoginWindow extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(111, 111, 111))))))
@@ -114,7 +115,7 @@ public class LoginWindow extends javax.swing.JFrame {
                         .addGap(44, 44, 44)
                         .addComponent(btnlogin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToggleButton2)
+                        .addComponent(register)
                         .addGap(58, 58, 58))))
         );
 
@@ -128,32 +129,30 @@ public class LoginWindow extends javax.swing.JFrame {
         String email, pass, querysql;
         email = emaitxt.getText();
         pass = passtxt.getText();
-        
-        
-        
-        if (email==""){
+        if (email.length()==0){
             JOptionPane.showMessageDialog(null, "Por favor introduza su correo");
     }else{
         String[] read = new String[2];
         
-        querysql = "SELECT email, password from users";
+        querysql = "SELECT email, password from users where email= '" + email + "'";
         try{
             Statement st = con2.createStatement();
             ResultSet rs = st.executeQuery(querysql);
             while (rs.next()){
                 read[0] = rs.getString("email");
                 read[1] = rs.getString("password");
-            }
-            if (read[0]==email){
-                if (read[1]==pass){
-                    //Aqui va la jugada
-                    hola = email;
-                }else{
-                    JOptionPane.showMessageDialog(null,"Contraseña incorrecta");
+                if (email.equals(read[0])){
+                    if (pass.equals(read[1])){
+                        JOptionPane.showMessageDialog(null,"Contraseña");
+                        hola = email;
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Contraseña incorrecta");
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(null,"Usuario no registrado, regístrese "+read[0]+"/"+email);
                 }
-            } else{
-                JOptionPane.showMessageDialog(null,"Usuario no registrado, regístrese");
             }
+            
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null,"Error:"+e);
         }
@@ -161,9 +160,13 @@ public class LoginWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnloginActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+    private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+        LoginWindow lw = new LoginWindow();
+        lw.setVisible(false);
+        RegisterClient rc = new RegisterClient();
+        rc.setVisible(true);
+    }//GEN-LAST:event_registerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,12 +205,12 @@ public class LoginWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnlogin;
-    private javax.swing.JTextField emaitxt;
+    public javax.swing.JTextField emaitxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JPasswordField passtxt;
+    private javax.swing.JToggleButton register;
     // End of variables declaration//GEN-END:variables
 }
