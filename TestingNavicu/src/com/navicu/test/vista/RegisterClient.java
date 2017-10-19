@@ -44,6 +44,8 @@ public class RegisterClient extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         date = new com.toedter.calendar.JDateChooser();
+        jLabel8 = new javax.swing.JLabel();
+        passwordtxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,36 +68,39 @@ public class RegisterClient extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setText("Contraseña");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(33, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(emailtxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(citxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nombretxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                            .addComponent(apellidotxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                            .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(70, 70, 70))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
+                .addGap(136, 136, 136)
                 .addComponent(jButton1)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(emailtxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(citxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nombretxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(apellidotxt, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(passwordtxt))
+                .addGap(70, 70, 70))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(71, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -127,11 +132,15 @@ public class RegisterClient extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(emailtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(date, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(passwordtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addGap(23, 23, 23))
+                .addContainerGap())
         );
 
         pack();
@@ -141,12 +150,12 @@ public class RegisterClient extends javax.swing.JFrame {
         // TODO add your handling code here:
         ConnectionPostgresql con = new ConnectionPostgresql();
         Connection con2 = con.Connectionsql();
-        String nombre, apellido, cedula, fecha, correo, insertsql;
-        Calendar fechaaux;
+        String nombre, apellido, cedula, fecha, correo, password, insertsql;
         nombre = nombretxt.getText();
         apellido = apellidotxt.getText();
         cedula = citxt.getText();
         correo = emailtxt.getText();
+        password = passwordtxt.getText();
         
         String idvalue = "NEXTVAL(users_id_seq)";
         
@@ -155,7 +164,7 @@ public class RegisterClient extends javax.swing.JFrame {
         String year = Integer.toString(date.getCalendar().get(Calendar.YEAR));
         fecha = (dia + "-" + mes + "-" + year);
         
-        insertsql = "INSERT INTO users VALUES (?,?,?,?,?,?)";
+        insertsql = "INSERT INTO users VALUES (?,?,?,?,?,?,?)";
         try{
             PreparedStatement ps  = con2.prepareStatement(insertsql);
             ps.setString(1, idvalue);
@@ -164,13 +173,15 @@ public class RegisterClient extends javax.swing.JFrame {
             ps.setString(4, cedula);
             ps.setString(5, fecha);
             ps.setString(6, correo);
+            ps.setString(6, password);
             
             int n = ps.executeUpdate();
                 if (n>0){
-                     JOptionPane.showMessageDialog(null, "Datos guardados satisfactoriamente");
+                    JOptionPane.showMessageDialog(null, "Datos guardados satisfactoriamente");
                 }else{
                     JOptionPane.showMessageDialog(null, "Los datos no se guardaron, intente nuevamene");
                 }
+                con2.close();
             
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error:"+e);
@@ -225,6 +236,8 @@ public class RegisterClient extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField nombretxt;
+    private javax.swing.JTextField passwordtxt;
     // End of variables declaration//GEN-END:variables
 }
